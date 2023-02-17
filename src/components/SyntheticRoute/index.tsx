@@ -1,8 +1,9 @@
 import React from "react";
+import { syntheticRouteToNode } from "./util";
 
-export type SyntheticRouteProps = {
+export interface SyntheticRouteProps {
   routes?: SyntheticRoute[];
-};
+}
 
 /**
  * RetroPath
@@ -14,14 +15,17 @@ export interface SyntheticRoute {
   target: string;
 }
 
-const SyntheticRoute: React.FC<SyntheticRouteProps> = ({ routes }) => {
+const SyntheticRouteComp: React.FC<SyntheticRouteProps> = ({ routes }) => {
   return (
-    <>
-      {routes?.map((route) => (
-        <></>
-      ))}
-    </>
+    <ol>
+      {routes?.map((route) => {
+        const node = syntheticRouteToNode(route);
+        return <li>
+          
+        </li>;
+      })}
+    </ol>
   );
 };
 
-export default SyntheticRoute;
+export default SyntheticRouteComp;
