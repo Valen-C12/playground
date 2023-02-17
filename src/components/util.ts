@@ -1,11 +1,6 @@
-import { SyntheticRoute } from ".";
-
-export interface SyntheticRouteNode {
-  value: string;
-  mainReactant?: SyntheticRouteNode;
-  otherReactants?: string[];
-  hasSideRoute?: boolean;
-}
+import { RDKitModule } from "@rdkit/rdkit";
+import { SyntheticRoute } from "./SyntheticRoute";
+import { SyntheticRouteNode } from "./SyntheticRouteNode";
 
 export const syntheticRouteToNode = ({
   target,
@@ -22,6 +17,7 @@ export const syntheticRouteToNode = ({
   const [main, others] = parseChild(children, allChildrenSmiles);
   return {
     value: target,
+    rxn,
     mainReactant: syntheticRouteToNode(main),
     otherReactants: others,
     hasSideRoute: children.length > 1,
@@ -59,3 +55,34 @@ const calTreeDeepth = ({ children }: SyntheticRoute): number => {
       .reduce((acc, cur) => Math.max(acc, cur)) + 1
   );
 };
+
+const initRDKit = (() => {
+  let rdkitLoadingPromise: Promise<RDKitModule>;
+
+  return () => {
+    /**
+     * Utility function ensuring there's only one call made to load RDKit
+     * It returns a promise with the resolved RDKit API as value on success,
+     * and a rejected promise with the error on failure.
+     *
+     * The RDKit API is also attached to the global object on successful load.
+     */
+    if (!rdkitLoadingPromise) {
+      rdkitLoadingPromise = new Promise((resolve, reject) => {
+        window
+          .initRDKitModule()
+          .then((RDKit) => {
+            window.RDKit = RDKit;
+            resolve(RDKit);
+          })
+          .catch((e) => {
+            reject();
+          });
+      });
+    }
+
+    return rdkitLoadingPromise;
+  };
+})();
+
+export default initRDKit;

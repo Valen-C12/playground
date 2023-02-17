@@ -1,5 +1,7 @@
 import React from "react";
-import { syntheticRouteToNode } from "./util";
+import SyntheticRouteNodeComp from "../SyntheticRouteNode";
+import { syntheticRouteToNode } from "../util";
+import "./index.css";
 
 export interface SyntheticRouteProps {
   routes?: SyntheticRoute[];
@@ -17,13 +19,14 @@ export interface SyntheticRoute {
 
 const SyntheticRouteComp: React.FC<SyntheticRouteProps> = ({ routes }) => {
   return (
-    <ol>
-      {routes?.map((route) => {
-        const node = syntheticRouteToNode(route);
-        return <li>
-          
-        </li>;
-      })}
+    <ol className="route-list">
+      {routes?.map((route, index) => (
+        <li key={index}>
+          <div className="route-path">
+            <SyntheticRouteNodeComp node={syntheticRouteToNode(route)} />
+          </div>
+        </li>
+      ))}
     </ol>
   );
 };

@@ -1,0 +1,13 @@
+.route-list {
+  width: 100%;
+  overflow: hidden;
+}
+.route-path {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
