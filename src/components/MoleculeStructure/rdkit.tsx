@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { JSMol, RDKitModule } from "@rdkit/rdkit";
 import _ from "lodash";
-import initRDKit from "../util";
+import { initRDKit } from "../util";
 
 export interface MoleculeStructureProps {
   structure: string;

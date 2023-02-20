@@ -1,27 +1,23 @@
 import { Field, Form, Formik } from "formik";
+import { useState } from "react";
 import "./App.css";
 import SyntheticRoute from "./components/SyntheticRoute";
-
-interface FormValues {
-  target: string;
-  max_rxn_steps?: number;
-  n_path?: number;
-  max_material_cost?: number;
-  exclude_substructures?: string[];
-  exclude_materials?: string[];
-  exclude_rxns?: string[];
-}
+import { useRouteSearch } from "./services/routeSearch";
+import { RouteSearchParams } from "./services/routeSearch/type";
 
 function App() {
+  const [params, setParams] = useState<RouteSearchParams>({
+    target: "CCOC(=O)C(F)C(NCC(C)C)",
+    max_rxn_steps: 3,
+    n_path: 5,
+  });
+  const { data, isLoading } = useRouteSearch(params);
+
   return (
     <div className="App">
-      <Formik<FormValues>
-        initialValues={{
-          target: "CCOC(=O)C(F)C(NCC(C)C)",
-          max_rxn_steps: 3,
-          n_path: 5,
-        }}
-        onSubmit={() => {}}
+      <Formik<RouteSearchParams>
+        initialValues={params}
+        onSubmit={(value) => setParams(value)}
       >
         <Form>
           <label htmlFor="target">目标分子</label>
@@ -67,72 +63,13 @@ function App() {
           <button type="submit">Submit</button>
         </Form>
       </Formik>
-      <SyntheticRoute routes={routes} />
+      {!isLoading && data?.data ? (
+        <SyntheticRoute routes={data.data} />
+      ) : (
+        "Loading..."
+      )}
     </div>
   );
 }
 
 export default App;
-
-const routes = [
-  {
-    target: "CCOC(=O)C(F)C(NCC(C)C)c1cc(C)c(OC)c(C)c1",
-    rxn: "CC(C)(C)[O-].CC(C)CN.CCOC(=O)C(F)C(Br)c1cc(C)c(OC)c(C)c1.[Li+]>>CCOC(=O)C(F)C(NCC(C)C)c1cc(C)c(OC)c(C)c1",
-    children: [
-      {
-        target: "CCOC(=O)C(F)C(Br)c1cc(C)c(OC)c(C)c1",
-        rxn: "BrP(Br)Br.CCOC(=O)C(F)C(O)c1cc(C)c(OC)c(C)c1>>CCOC(=O)C(F)C(Br)c1cc(C)c(OC)c(C)c1",
-        step: 2,
-        children: [
-          {
-            target: "CCOC(=O)C(F)C(O)c1cc(C)c(OC)c(C)c1",
-            rxn: "CCOC(=O)C(F)Br.COc1c(C)cc(C=O)cc1C.O=S(=O)([O-])O.[K+].[Mn]>>CCOC(=O)C(F)C(O)c1cc(C)c(OC)c(C)c1",
-            step: 3,
-            children: [],
-          },
-        ],
-      },
-    ],
-    step: 1,
-  },
-  {
-    target: "CCOC(=O)C(F)C(NCC(C)C)c1cc(C)c(OC)c(C)c1",
-    rxn: "CC(C)(C)[O-].CC(C)CN.CCOC(=O)C(F)C(Br)c1cc(C)c(OC)c(C)c1.[Li+]>>CCOC(=O)C(F)C(NCC(C)C)c1cc(C)c(OC)c(C)c1",
-    children: [
-      {
-        target: "CCOC(=O)C(F)C(Br)c1cc(C)c(OC)c(C)c1",
-        rxn: "BrP(Br)Br.CCOC(=O)C(F)C(O)c1cc(C)c(OC)c(C)c1>>CCOC(=O)C(F)C(Br)c1cc(C)c(OC)c(C)c1",
-        step: 2,
-        children: [
-          {
-            target: "CCOC(=O)C(F)C(O)c1cc(C)c(OC)c(C)c1",
-            rxn: "CCOC(=O)C(F)Br.COc1c(C)cc(C=O)cc1C.O=C([O-])O.[Na+].[Zn]>>CCOC(=O)C(F)C(O)c1cc(C)c(OC)c(C)c1",
-            step: 3,
-            children: [],
-          },
-        ],
-      },
-    ],
-    step: 1,
-  },
-  {
-    target: "CCOC(=O)C(F)C(NCC(C)C)c1cc(C)c(OC)c(C)c1",
-    rxn: "CC(C)(C)[O-].CC(C)CN.CCOC(=O)C(F)C(Br)c1cc(C)c(OC)c(C)c1.[Li+]>>CCOC(=O)C(F)C(NCC(C)C)c1cc(C)c(OC)c(C)c1",
-    children: [
-      {
-        target: "CCOC(=O)C(F)C(Br)c1cc(C)c(OC)c(C)c1",
-        rxn: "BrP(Br)Br.CCOC(=O)C(F)C(O)c1cc(C)c(OC)c(C)c1>>CCOC(=O)C(F)C(Br)c1cc(C)c(OC)c(C)c1",
-        step: 2,
-        children: [
-          {
-            target: "CCOC(=O)C(F)C(O)c1cc(C)c(OC)c(C)c1",
-            rxn: "CCCC[N+](CCCC)(CCCC)CCCC.CCOC(=O)C(F)Br.COc1c(C)cc(C=O)cc1C.C[Si](C)(C)Cl.O=C([O-])O.[Cl-].[F-].[Mn].[NH4+].[Na+]>>CCOC(=O)C(F)C(O)c1cc(C)c(OC)c(C)c1",
-            step: 3,
-            children: [],
-          },
-        ],
-      },
-    ],
-    step: 1,
-  },
-];

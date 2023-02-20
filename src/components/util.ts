@@ -56,7 +56,7 @@ const calTreeDeepth = ({ children }: SyntheticRoute): number => {
   );
 };
 
-const initRDKit = (() => {
+export const initRDKit = (() => {
   let rdkitLoadingPromise: Promise<RDKitModule>;
 
   return () => {
@@ -84,5 +84,3 @@ const initRDKit = (() => {
     return rdkitLoadingPromise;
   };
 })();
-
-export default initRDKit;
