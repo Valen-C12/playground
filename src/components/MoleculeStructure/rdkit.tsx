@@ -2,18 +2,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import { JSMol, RDKitModule } from "@rdkit/rdkit";
 import _ from "lodash";
 import { initRDKit } from "../util";
+import { MoleculeStructureProps } from ".";
 
-export interface MoleculeStructureProps {
-  structure: string;
-  className?: string;
-  width?: number;
-  height?: number;
+export interface RdkitMoleculeStructureProps extends MoleculeStructureProps {
   subStructure?: string;
   extraDetails?: object;
-  drawingDelay?: number;
 }
 
-const MoleculeStructure: React.FC<MoleculeStructureProps> = ({
+const MoleculeStructure: React.FC<RdkitMoleculeStructureProps> = ({
   structure,
   className,
   width = 250,

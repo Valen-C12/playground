@@ -1,5 +1,5 @@
-import { Field, Form, Formik } from "formik";
-import { useState } from "react";
+import { Field, Form, Formik, useFormikContext } from "formik";
+import { useEffect, useState } from "react";
 import "./App.css";
 import SyntheticRoute from "./components/SyntheticRoute";
 import { useRouteSearch } from "./services/routeSearch";
@@ -12,6 +12,7 @@ function App() {
     n_path: 5,
   });
   const { data, isLoading } = useRouteSearch(params);
+  const [displayStyle, setDisplayStyle] = useState<string>("rdKit");
 
   return (
     <div className="App">
@@ -61,10 +62,32 @@ function App() {
           <br />
 
           <button type="submit">Submit</button>
+          <br />
+
+          <div role="group">
+            <label>
+              <Field
+                type="radio"
+                name="display"
+                value="rdKit"
+                onClick={(e) => setDisplayStyle(e.target?.value)}
+              />
+              rdKit
+            </label>
+            <label>
+              <Field
+                type="radio"
+                name="display"
+                value="smilesDrawer"
+                onClick={(e) => setDisplayStyle(e.target?.value)}
+              />
+              SmilesDrawer
+            </label>
+          </div>
         </Form>
       </Formik>
       {!isLoading && data?.data ? (
-        <SyntheticRoute routes={data.data} />
+        <SyntheticRoute routes={data.data} display={displayStyle} />
       ) : (
         "Loading..."
       )}

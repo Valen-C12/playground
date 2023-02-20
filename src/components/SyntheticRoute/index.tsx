@@ -5,6 +5,7 @@ import "./index.css";
 
 export interface SyntheticRouteProps {
   routes?: SyntheticRoute[];
+  display?: string;
 }
 
 /**
@@ -17,13 +18,19 @@ export interface SyntheticRoute {
   target: string;
 }
 
-const SyntheticRouteComp: React.FC<SyntheticRouteProps> = ({ routes }) => {
+const SyntheticRouteComp: React.FC<SyntheticRouteProps> = ({
+  routes,
+  display,
+}) => {
   return (
     <ol className="route-list">
       {routes?.map((route, index) => (
         <li key={index}>
           <div className="route-path">
-            <SyntheticRouteNodeComp node={syntheticRouteToNode(route)} />
+            <SyntheticRouteNodeComp
+              node={syntheticRouteToNode(route)}
+              display={display}
+            />
           </div>
         </li>
       ))}

@@ -1,5 +1,6 @@
 import React from "react";
-import MoleculeStructure from "../MoleculeStructure/rdkit";
+import RdKitMoleculeStructure from "../MoleculeStructure/rdkit";
+import SmilesDrawerMoleculeStructure from "../MoleculeStructure/smilesDrawer";
 
 export interface SyntheticRouteNode {
   value: string;
@@ -11,18 +12,24 @@ export interface SyntheticRouteNode {
 
 export type SyntheticRouteNodeCompProps = {
   node: SyntheticRouteNode;
+  display?: string;
 };
 
 const SyntheticRouteNodeComp: React.FC<SyntheticRouteNodeCompProps> = ({
   node: { value, rxn, mainReactant, otherReactants, hasSideRoute },
+  display,
 }) => {
   return (
     <>
-      <MoleculeStructure structure={value} />
+      {display === "rdKit" ? (
+        <RdKitMoleculeStructure structure={value} />
+      ) : (
+        <SmilesDrawerMoleculeStructure structure={value} />
+      )}
       {mainReactant && (
         <>
           <div title={rxn}>{arrow}</div>
-          <SyntheticRouteNodeComp node={mainReactant} />
+          <SyntheticRouteNodeComp node={mainReactant} display={display} />
         </>
       )}
     </>
